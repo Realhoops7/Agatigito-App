@@ -4,12 +4,14 @@ import {
   Music, Cigarette, Battery, Luggage, ChevronRight, X, Plus, Minus,
   Check, MessageCircle, Sparkles, Mountain, Moon, Building2, ArrowRight,
   Car, Phone, CreditCard, Smartphone, Clock, Route as RouteIcon,
-  Award, TrendingUp, Camera, LogOut, Compass, AlertTriangle, Radio, Bell, ImagePlus
+  Award, TrendingUp, Camera, LogOut, Compass, AlertTriangle, Radio, Bell, ImagePlus,
+  FileText, BookOpen, Mail
 } from "lucide-react";
 import DestinationAutocomplete from "./components/DestinationAutocomplete.jsx";
 import RouteMap from "./components/RouteMap.jsx";
 import LiveTrackingMap from "./components/LiveTrackingMap.jsx";
 import VibeMediaCapture from "./components/VibeMediaCapture.jsx";
+import logoImg from "./assets/logo.jpg";
 
 /* ---------------------------------------------------------
    AGATIGITO — "Never Travel Alone"
@@ -60,7 +62,7 @@ const STYLES = `
   }
   .agt-logo {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 8px;
   }
   .agt-logo-mark {
@@ -69,6 +71,13 @@ const STYLES = `
     font-size: 22px;
     letter-spacing: 0.01em;
     color: var(--gold);
+  }
+  .agt-logo-img {
+    height: 34px;
+    width: 34px;
+    border-radius: 9px;
+    object-fit: cover;
+    display: block;
   }
   .agt-logo-tag {
     font-size: 10.5px;
@@ -967,6 +976,14 @@ const STYLES = `
     font-weight: 600;
     color: var(--gold);
     margin-bottom: 4px;
+  }
+  .agt-onboard-logo-img {
+    height: 76px;
+    width: 76px;
+    border-radius: 18px;
+    object-fit: cover;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
   }
   .agt-onboard-sub {
     color: rgba(246,241,230,0.7);
@@ -2678,6 +2695,10 @@ export default function App() {
   const [showInvite, setShowInvite] = useState(false);
   const [useCredits, setUseCredits] = useState(false);
 
+  // ---- Legal ----
+  const [showTerms, setShowTerms] = useState(false);
+  const [showGuidelines, setShowGuidelines] = useState(false);
+
   // ---- Tours ----
   const [selectedTour, setSelectedTour] = useState(null);
   const [joinedTours, setJoinedTours] = useState([]);
@@ -3386,7 +3407,7 @@ export default function App() {
             <button type="button" className={lang === "en" ? "active" : ""} onClick={() => changeLang("en")}>EN</button>
             <button type="button" className={lang === "rw" ? "active" : ""} onClick={() => changeLang("rw")}>RW</button>
           </div>
-          <div className="agt-onboard-mark">{tr("onboardTitle")}</div>
+          <img src={logoImg} alt="Agatigito" className="agt-onboard-logo-img" />
           <div className="agt-onboard-sub">
             <TravelPulse width={30} />
             {tr("onboardSub")}
@@ -3481,7 +3502,7 @@ export default function App() {
       <div className="agt-header">
         <div className="agt-header-top">
           <div className="agt-logo" onDoubleClick={openAdminGate} title="">
-            <span className="agt-logo-mark">Agatigito</span>
+            <img src={logoImg} alt="Agatigito" className="agt-logo-img" />
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div className="agt-bell-wrap" onClick={() => { setShowNotifications(true); markAllNotificationsRead(); }}>
@@ -5165,13 +5186,79 @@ export default function App() {
 
               <div className="agt-section-label" style={{ marginTop: 20 }}><span>Help & Support</span></div>
               <p style={{ fontSize: 11.5, color: "#8A8172", margin: "-4px 0 10px 0", lineHeight: 1.5 }}>
-                Reach Agatigito directly — separate from your personal emergency contact above.
+                Reach the Agatigito team directly — separate from your personal emergency contact above.
               </p>
-              <a href="tel:+250788000000" className="agt-sos-option" style={{ textDecoration: "none", color: "var(--ink)" }}>
-                <Phone size={17} color="var(--forest)" /> Call support · +250 788 000 000
+              <a href="tel:+250789546286" className="agt-sos-option" style={{ textDecoration: "none", color: "var(--ink)" }}>
+                <Phone size={17} color="var(--forest)" /> Junior Nzamurambaho · +250 789 546 286
               </a>
-              <div className="agt-sos-option" onClick={() => showToast("Support chat isn't wired to a live agent in this prototype")}>
-                <MessageCircle size={17} color="var(--forest)" /> Chat with support
+              <a href="mailto:jrnzamu1999@gmail.com" className="agt-sos-option" style={{ textDecoration: "none", color: "var(--ink)" }}>
+                <Mail size={17} color="var(--forest)" /> Junior Nzamurambaho · jrnzamu1999@gmail.com
+              </a>
+              <a href="mailto:joelle.r@rlp-ruanda.de" className="agt-sos-option" style={{ textDecoration: "none", color: "var(--ink)" }}>
+                <Mail size={17} color="var(--forest)" /> Joelle Rätzke · joelle.r@rlp-ruanda.de
+              </a>
+              <a href="tel:+250783663311" className="agt-sos-option" style={{ textDecoration: "none", color: "var(--ink)" }}>
+                <Phone size={17} color="var(--forest)" /> Dixon Mpogazi · +250 783 663 311
+              </a>
+              <a href="mailto:mpogazidixon@gmail.com" className="agt-sos-option" style={{ textDecoration: "none", color: "var(--ink)" }}>
+                <Mail size={17} color="var(--forest)" /> Dixon Mpogazi · mpogazidixon@gmail.com
+              </a>
+
+              <div className="agt-section-label" style={{ marginTop: 20 }}><span>Legal</span></div>
+              <div className="agt-sos-option" onClick={() => setShowTerms(true)}>
+                <FileText size={17} color="var(--forest)" /> Terms & Conditions
+              </div>
+              <div className="agt-sos-option" onClick={() => setShowGuidelines(true)}>
+                <BookOpen size={17} color="var(--forest)" /> Community Guidelines
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Terms & Conditions sheet */}
+      {showTerms && (
+        <div className="agt-overlay" onClick={() => setShowTerms(false)}>
+          <div className="agt-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="agt-sheet-handle" />
+            <div className="agt-sheet-close" onClick={() => setShowTerms(false)}><X size={16} /></div>
+            <div className="agt-sheet-body" style={{ paddingTop: 30 }}>
+              <div className="disp" style={{ fontSize: 19, fontWeight: 600, marginBottom: 4 }}>Terms & Conditions</div>
+              <p style={{ fontSize: 11, color: "#8A8172", margin: "0 0 14px 0", lineHeight: 1.5 }}>
+                Draft — the Agatigito team is still finalizing this text. Nothing here is final until published.
+              </p>
+              <div style={{ fontSize: 12.5, color: "var(--ink)", lineHeight: 1.6 }}>
+                <p><strong>1. Using Agatigito.</strong> Agatigito connects riders, drivers, and travel companions across Rwanda. By creating a profile you agree to provide accurate information and to treat other travelers with respect.</p>
+                <p><strong>2. Bookings & payments.</strong> Prices shown at booking include the Agatigito service fee. Funds for a trip are held until the trip is marked complete, then released to the driver.</p>
+                <p><strong>3. Cancellations.</strong> Trips can be cancelled from the booking screen; cancellation credits and refund timing follow the policy shown at checkout.</p>
+                <p><strong>4. Conduct & safety.</strong> Drivers and riders are expected to follow the Community Guidelines. Agatigito may suspend accounts that put other travelers at risk.</p>
+                <p><strong>5. Liability.</strong> Agatigito is a booking platform; it does not own vehicles or employ drivers directly. Verified identity and ratings are provided to help travelers make informed choices, not as a guarantee.</p>
+                <p><strong>6. Changes.</strong> These terms may be updated as the app grows. Continuing to use Agatigito after an update means you accept the revised terms.</p>
+                <p style={{ marginTop: 14 }}>Questions about these terms? Reach the team under Help & Support above.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Community Guidelines sheet */}
+      {showGuidelines && (
+        <div className="agt-overlay" onClick={() => setShowGuidelines(false)}>
+          <div className="agt-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="agt-sheet-handle" />
+            <div className="agt-sheet-close" onClick={() => setShowGuidelines(false)}><X size={16} /></div>
+            <div className="agt-sheet-body" style={{ paddingTop: 30 }}>
+              <div className="disp" style={{ fontSize: 19, fontWeight: 600, marginBottom: 4 }}>Community Guidelines</div>
+              <p style={{ fontSize: 11, color: "#8A8172", margin: "0 0 14px 0", lineHeight: 1.5 }}>
+                Draft — the Agatigito team is still finalizing this text. Nothing here is final until published.
+              </p>
+              <div style={{ fontSize: 12.5, color: "var(--ink)", lineHeight: 1.6 }}>
+                <p><strong>Be on time.</strong> Show up at the agreed pickup point and time, and message ahead if you're running late.</p>
+                <p><strong>Be honest.</strong> Keep your profile, vehicle details, and reviews accurate — other travelers rely on them.</p>
+                <p><strong>Be respectful.</strong> No harassment, discrimination, or unsafe driving. Agree on details like luggage, pets, and smoking through the in-app chat before the trip.</p>
+                <p><strong>Keep it on the platform.</strong> Book, pay, and communicate through Agatigito so that trips stay covered by support and dispute resolution.</p>
+                <p><strong>Speak up.</strong> Use the SOS button for emergencies and the "Report a problem" option to flag anything that made a trip feel unsafe.</p>
+                <p style={{ marginTop: 14 }}>These guidelines apply to everyone using Agatigito — riders, drivers, and companions alike.</p>
               </div>
             </div>
           </div>
