@@ -42,6 +42,28 @@ jobs:
             npx cap add android
           fi
 
+      - name: Apply the Agatigito app icon
+        # `cap add android` scaffolds the project with Capacitor's placeholder
+        # icon (white background + the stock Capacitor mark). android-icon-src/
+        # holds our real logo pre-rendered at every density Android expects, in
+        # the exact filenames Capacitor's template already uses — copying them
+        # in just overwrites the placeholders, no XML surgery required.
+        run: |
+          for density in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            cp android-icon-src/mipmap-$density/ic_launcher.png \
+               android/app/src/main/res/mipmap-$density/ic_launcher.png
+            cp android-icon-src/mipmap-$density/ic_launcher_round.png \
+               android/app/src/main/res/mipmap-$density/ic_launcher_round.png
+            cp android-icon-src/mipmap-$density/ic_launcher_foreground.png \
+               android/app/src/main/res/mipmap-$density/ic_launcher_foreground.png
+          done
+          # Best-effort: if the adaptive-icon background is a plain color
+          # resource, match it to the logo's cream backdrop so no white ring
+          # can show through. Harmless no-op if that file isn't there.
+          if [ -f android/app/src/main/res/values/ic_launcher_background.xml ]; then
+            sed -i 's/#[0-9A-Fa-f]\{6,8\}/#F6F1E6/' android/app/src/main/res/values/ic_launcher_background.xml
+          fi
+
       - name: Sync web build into the Android project
         run: npx cap sync android
 
