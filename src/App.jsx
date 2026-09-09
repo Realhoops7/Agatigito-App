@@ -327,6 +327,7 @@ const STYLES = `
   .agt-badge.gold { background: #FBEED1; color: #96701C; }
   .agt-badge.seats { background: var(--paper-2); color: var(--forest); }
   .agt-badge.full { background: #EDE1DA; color: #8A5A3D; }
+  .agt-badge.verified { background: #E3EFE8; color: var(--forest); }
 
   /* ---- Empty / CTA ---- */
   .agt-fab {
@@ -1760,7 +1761,7 @@ const INITIAL_TRIPS = [
   {
     id: "t1", from: "Kigali", to: "Rubavu", date: "Sat, 9 Aug", time: "09:00 AM", distance: 157,
     seatsAvailable: 3, seatsTotal: 4, seatsTaken: [1], price: 12000, vehicle: "Toyota Prado", plate: "RAD 213 B",
-    driver: { name: "Eric N.", initials: "EN", rating: 4.9, trips: 128, level: "Gold", womenOnly: false },
+    driver: { name: "Eric N.", initials: "EN", rating: 4.9, trips: 128, level: "Gold", womenOnly: false, verified: { id: true, phone: true } },
     amenities: ["ac", "music", "wifi", "charging", "luggage"],
     reviews: [{ name: "Diane K.", text: "Smooth ride, very punctual and the car was spotless." }],
     waypoints: [
@@ -1772,7 +1773,7 @@ const INITIAL_TRIPS = [
   {
     id: "t2", from: "Kigali", to: "Musanze", date: "Fri, 8 Aug", time: "05:00 PM", distance: 106,
     seatsAvailable: 2, seatsTotal: 4, seatsTaken: [1, 2], price: 8000, vehicle: "Toyota Rav4", plate: "RAC 884 A",
-    driver: { name: "Aline U.", initials: "AU", rating: 5.0, trips: 74, level: "Diamond", womenOnly: true, circleId: "c1" },
+    driver: { name: "Aline U.", initials: "AU", rating: 5.0, trips: 74, level: "Diamond", womenOnly: true, circleId: "c1", verified: { id: true, phone: true } },
     amenities: ["ac", "charging", "pet"],
     reviews: [{ name: "Grace M.", text: "Loved that it was women-only, felt completely safe the whole trip." }],
     waypoints: [
@@ -1784,7 +1785,7 @@ const INITIAL_TRIPS = [
   {
     id: "t3", from: "Kigali", to: "Huye", date: "Sat, 9 Aug", time: "07:30 AM", distance: 135,
     seatsAvailable: 4, seatsTotal: 6, seatsTaken: [2, 4], price: 6000, vehicle: "Toyota Noah", plate: "RAB 552 C",
-    driver: { name: "Patrick S.", initials: "PS", rating: 4.7, trips: 203, level: "Gold", womenOnly: false, circleId: "c2" },
+    driver: { name: "Patrick S.", initials: "PS", rating: 4.7, trips: 203, level: "Gold", womenOnly: false, circleId: "c2", verified: { id: true, phone: true } },
     amenities: ["ac", "music", "luggage"],
     reviews: [{ name: "Jules R.", text: "Great music taste and easy conversation, would ride again." }],
     waypoints: [
@@ -1796,7 +1797,7 @@ const INITIAL_TRIPS = [
   {
     id: "t4", from: "Kigali", to: "Rusizi", date: "Sun, 10 Aug", time: "06:00 AM", distance: 228,
     seatsAvailable: 1, seatsTotal: 6, seatsTaken: [1, 2, 3, 4, 5], price: 15000, vehicle: "Land Cruiser V8", plate: "RAA 011 K",
-    driver: { name: "Moses T.", initials: "MT", rating: 4.8, trips: 91, level: "Silver", womenOnly: false },
+    driver: { name: "Moses T.", initials: "MT", rating: 4.8, trips: 91, level: "Silver", womenOnly: false, verified: { id: true, phone: true } },
     amenities: ["ac", "wifi", "charging", "luggage", "music"],
     reviews: [{ name: "Fabrice N.", text: "Comfortable long trip, driver knew every good stop along the way." }],
     waypoints: [
@@ -1808,7 +1809,7 @@ const INITIAL_TRIPS = [
   {
     id: "t5", from: "Kigali", to: "Nyagatare", date: "Fri, 8 Aug", time: "02:00 PM", distance: 110,
     seatsAvailable: 3, seatsTotal: 5, seatsTaken: [1, 2], price: 7000, vehicle: "Suzuki Ertiga", plate: "RAE 340 M",
-    driver: { name: "Solange I.", initials: "SI", rating: 4.95, trips: 56, level: "Gold", womenOnly: true },
+    driver: { name: "Solange I.", initials: "SI", rating: 4.95, trips: 56, level: "Gold", womenOnly: true, verified: { id: true, phone: true } },
     amenities: ["ac", "charging"],
     reviews: [{ name: "Yvette B.", text: "Friendly and safe, exactly what I needed for a solo trip." }],
     waypoints: [
@@ -1844,7 +1845,7 @@ const INITIAL_TRIPS = [
   {
     id: "t8", from: "Nyabugogo", to: "Rilima", date: "Sun, 10 Aug", time: "08:00 AM", distance: 55,
     seatsAvailable: 4, seatsTotal: 6, seatsTaken: [2, 4], price: 2500, vehicle: "Toyota Noah", plate: "RAH 455 Q",
-    driver: { name: "Claudine H.", initials: "CH", rating: 4.9, trips: 61, level: "Gold", womenOnly: true, circleId: "c4" },
+    driver: { name: "Claudine H.", initials: "CH", rating: 4.9, trips: 61, level: "Gold", womenOnly: true, circleId: "c4", verified: { id: true, phone: true } },
     amenities: ["ac"],
     reviews: [{ name: "Peace U.", text: "Women-only van, felt safe going to visit family in the village." }],
     waypoints: [
@@ -2288,12 +2289,43 @@ function Toast({ message }) {
 
 /* ---------------- Main App ---------------- */
 
-const DEFAULT_PROFILE = { name: "", phone: "", email: "", nationalId: "", tripsCompleted: 0, rating: null, travelPersonality: null, verified: { id: false, email: false, phone: false }, circles: [], referralCode: "", referralCredits: 0, referredCount: 0, emergencyContact: { name: "", phone: "" }, hasVehicle: false, vehicleMake: "", vehiclePlate: "", photoDataUrl: "" };
+const DEFAULT_PROFILE = { name: "", phone: "", email: "", nationalId: "", tripsCompleted: 0, rating: null, travelPersonality: null, verified: { id: false, email: false, phone: false }, circles: [], referralCode: "", referralCredits: 0, referredCount: 0, emergencyContact: { name: "", phone: "" }, hasVehicle: false, vehicleMake: "", vehiclePlate: "", photoDataUrl: "", idDocDataUrl: "", licenseDataUrl: "", insuranceDataUrl: "" };
 
 function generateReferralCode(name) {
   const base = (name || "AGT").replace(/[^a-zA-Z]/g, "").slice(0, 4).toUpperCase() || "AGT";
   const suffix = String(Math.floor(100 + Math.random() * 900));
   return `${base}${suffix}`;
+}
+
+// Native <input type="date"/time"> pickers give every user the exact same
+// format (so trip lists don't end up with "9/8", "Aug 9", "09.08.26" all
+// mixed together), but they hand back plain ISO values ("2026-09-12",
+// "14:30"). These convert that into the friendly "Sat, 12 Sep" / "02:30 PM"
+// style the rest of the app already displays trip dates and times in.
+function todayIso() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function formatDisplayDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso + "T00:00:00");
+  if (isNaN(d.getTime())) return iso;
+  const weekday = d.toLocaleDateString("en-US", { weekday: "short" });
+  const month = d.toLocaleDateString("en-US", { month: "short" });
+  return `${weekday}, ${d.getDate()} ${month}`;
+}
+
+function formatDisplayTime(hm) {
+  if (!hm) return "";
+  const [hStr, mStr] = hm.split(":");
+  let h = Number(hStr);
+  if (isNaN(h)) return hm;
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  if (h === 0) h = 12;
+  return `${String(h).padStart(2, "0")}:${mStr || "00"} ${ampm}`;
 }
 
 function initialsFromName(name) {
@@ -2360,6 +2392,7 @@ const TRANSLATIONS = {
     navHome: "Home",
     navRides: "Rides",
     navPlans: "Plans",
+    navTrips: "Trips",
     // Home
     homeGoWhere: "Where are you going?",
     homeSearchPlaceholder: "Search a destination…",
@@ -2385,8 +2418,8 @@ const TRANSLATIONS = {
     homeToursSub: "Multi-day packages with a guide included",
     homeCorporate: "Corporate commute",
     homeCorporateSub: "Subsidized shared rides through your employer",
-    homeMyTrips: "My posted trips",
-    homeMyTripsSub: "Manage seats, passengers, and trip status",
+    homeMyTrips: "My trips",
+    homeMyTripsSub: "Trips you've booked or offered, all in one place",
     homeBrowseAll: "Browse all rides",
     // Common actions
     confirmPay: "Confirm & pay",
@@ -2442,6 +2475,7 @@ const TRANSLATIONS = {
     guidedTours: "Guided tours",
     corporatePrograms: "Corporate commute programs",
     myPostedTrips: "Trips you've posted",
+    myBookedTrips: "Trips you've booked",
     openParcels: "Open parcel requests",
     filterWomen: "Women-only",
     filterBudget: "Budget",
@@ -2466,6 +2500,7 @@ const TRANSLATIONS = {
     navHome: "Ahabanza",
     navRides: "Ingendo",
     navPlans: "Gahunda",
+    navTrips: "Ingendo zanjye",
     // Home
     homeGoWhere: "Ugiye he?",
     homeSearchPlaceholder: "Shakisha aho ugiye…",
@@ -2491,8 +2526,8 @@ const TRANSLATIONS = {
     homeToursSub: "Gahunda z'iminsi myinshi hamwe n'umuyobozi",
     homeCorporate: "Ingendo z'ikigo",
     homeCorporateSub: "Ingendo zifashijwemo n'ikigo ukoreramo",
-    homeMyTrips: "Ingendo natanze",
-    homeMyTripsSub: "Genzura intebe, abagenzi, n'aho urugendo rugeze",
+    homeMyTrips: "Ingendo zanjye",
+    homeMyTripsSub: "Ingendo wafashe cyangwa watanze, byose ahamwe",
     homeBrowseAll: "Reba ingendo zose",
     // Common actions
     confirmPay: "Emeza & wishyure",
@@ -2548,6 +2583,7 @@ const TRANSLATIONS = {
     guidedTours: "Ingendo z'ubukerarugendo",
     corporatePrograms: "Gahunda z'ingendo z'ibigo",
     myPostedTrips: "Ingendo watanze",
+    myBookedTrips: "Ingendo wafashe",
     openParcels: "Ipaki zishakirwa uwazitwara",
     filterWomen: "Abagore gusa",
     filterBudget: "Igiciro gito",
@@ -2698,6 +2734,7 @@ export default function App() {
   // ---- Legal ----
   const [showTerms, setShowTerms] = useState(false);
   const [showGuidelines, setShowGuidelines] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   // ---- Tours ----
   const [selectedTour, setSelectedTour] = useState(null);
@@ -2717,6 +2754,10 @@ export default function App() {
 
   // ---- Booking / cancellation ----
   const [bookingCreditApplied, setBookingCreditApplied] = useState(0);
+  // Every seat this profile has booked, so "My Trips" can list them —
+  // separate from `trips[].seatsTaken`, which only tracks seat numbers, not
+  // who booked them. { id, tripId, seats, pickupPoint, customPickup }
+  const [myBookings, setMyBookings] = useState([]);
 
   const [profile, setProfile] = useState(null); // null = still checking storage
   const [onboardForm, setOnboardForm] = useState({ name: "", phone: "", email: "", hasVehicle: false, vehicleMake: "", vehiclePlate: "", photoDataUrl: "" });
@@ -2818,6 +2859,36 @@ export default function App() {
         ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
         const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
         setOnboardForm((f) => ({ ...f, photoDataUrl: dataUrl }));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Driver document uploads (National ID photo, driving licence, insurance/
+  // Yellow Card) — resized to fit within 1000px on the long edge, keeping
+  // the original aspect ratio (unlike the square profile-photo crop above,
+  // a document needs its text to stay readable). Stored on the profile the
+  // same way the profile photo is; a real build would send these to the
+  // Agatigito team or a licensed verification partner instead — nothing
+  // here is auto-approved, which is why the UI always says "pending review".
+  const handleDocPick = (file, field) => {
+    if (!file || !profile) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const maxSide = 1000;
+        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+        saveProfile({ ...profile, [field]: dataUrl });
+        showToast("Document uploaded — pending review");
       };
       img.src = reader.result;
     };
@@ -2957,6 +3028,24 @@ export default function App() {
     setRatingText("");
     setBookingCreditApplied(0);
     setBookingStep("detail");
+  };
+
+  // Reopens a trip this profile already booked (from My Trips) at the
+  // "success" step — the same confirmation screen shown right after
+  // booking, with its status stepper, live tracking, and cancel button —
+  // restoring the exact seats and pickup point from that booking.
+  const viewMyBooking = (booking) => {
+    const trip = trips.find((t) => t.id === booking.tripId);
+    if (!trip) return;
+    setSelectedTrip(trip);
+    setSelectedSeats(booking.seats);
+    setPickupPoint(booking.pickupPoint || PICKUP_POINTS[0]);
+    setCustomPickup(booking.customPickup || "");
+    setUseCredits(false);
+    setShareLive(false);
+    setRatingStars(0);
+    setRatingText("");
+    setBookingStep("success");
   };
 
   const toggleSeat = (id) => {
@@ -3173,7 +3262,7 @@ export default function App() {
       id: `p${Date.now()}`,
       from: "Kigali",
       to: parcelForm.to.trim(),
-      date: parcelForm.date.trim() || "Flexible",
+      date: parcelForm.date ? formatDisplayDate(parcelForm.date) : "Flexible",
       size: parcelForm.size,
       desc: parcelForm.desc.trim(),
       reward: Number(parcelForm.reward),
@@ -3220,6 +3309,10 @@ export default function App() {
     setBookingCreditApplied(applied);
     setUseCredits(false);
     setBookingStep("success");
+    setMyBookings((prev) => [
+      ...prev,
+      { id: "b" + Date.now(), tripId: selectedTrip.id, seats: [...selectedSeats], pickupPoint, customPickup },
+    ]);
     addNotification("🎟️", "Seat confirmed", `${selectedTrip.from} → ${selectedTrip.to}, ${selectedTrip.date} · ${selectedSeats.length} seat${selectedSeats.length > 1 ? "s" : ""}.`);
   };
 
@@ -3243,6 +3336,7 @@ export default function App() {
         referralCredits: (profile.referralCredits || 0) + bookingCreditApplied,
       });
     }
+    setMyBookings((prev) => prev.filter((b) => b.tripId !== selectedTrip.id));
     showToast("Seat cancelled — refund processed" + (bookingCreditApplied > 0 ? " and credit returned" : ""));
     addNotification("✕", "Seat cancelled", `${selectedTrip.from} → ${selectedTrip.to} · refund processed.`);
     closeSheet();
@@ -3362,8 +3456,8 @@ export default function App() {
       id: "t" + Date.now(),
       from: form.from,
       to: form.to,
-      date: form.date,
-      time: form.time,
+      date: formatDisplayDate(form.date),
+      time: formatDisplayTime(form.time),
       distance: form.distance ? Number(form.distance) : null,
       recurring: form.recurring,
       seatsAvailable: Number(form.seats),
@@ -3381,6 +3475,7 @@ export default function App() {
         level,
         womenOnly: false,
         travelPersonality: profile.travelPersonality,
+        verified: { id: profile.verified.id, phone: profile.verified.phone },
       },
       amenities: ["ac"],
       reviews: [],
@@ -3388,6 +3483,7 @@ export default function App() {
     setTrips((prev) => [newTrip, ...prev]);
     setForm({ from: "Kigali", to: "", date: "", time: "", seats: "3", price: "", vehicle: "", distance: "", vehicleSize: "sedan", recurring: false });
     setFormDestPoint(null);
+    setFormOriginPoint({ lat: -1.9441, lng: 30.0619 });
     setTab("market");
     showToast("Trip posted to the marketplace");
   };
@@ -3438,6 +3534,7 @@ export default function App() {
                 <label>{tr("fullName")}</label>
                 <input
                   placeholder="e.g. Mpogazi K."
+                  autoComplete="name"
                   value={onboardForm.name}
                   onChange={(e) => setOnboardForm({ ...onboardForm, name: e.target.value })}
                 />
@@ -3446,6 +3543,8 @@ export default function App() {
                 <label>{tr("phoneNumber")}</label>
                 <input
                   placeholder="078X XXX XXX"
+                  type="tel"
+                  autoComplete="tel"
                   value={onboardForm.phone}
                   onChange={(e) => setOnboardForm({ ...onboardForm, phone: e.target.value })}
                 />
@@ -3454,6 +3553,8 @@ export default function App() {
                 <label>{tr("emailOptional")}</label>
                 <input
                   placeholder="you@email.com"
+                  type="email"
+                  autoComplete="email"
                   value={onboardForm.email}
                   onChange={(e) => setOnboardForm({ ...onboardForm, email: e.target.value })}
                 />
@@ -3529,6 +3630,7 @@ export default function App() {
           <button className={`agt-tab ${tab === "home" ? "active" : ""}`} onClick={() => setTab("home")}>{tr("navHome")}</button>
           <button className={`agt-tab ${tab === "market" ? "active" : ""}`} onClick={() => setTab("market")}>{tr("navRides")}</button>
           <button className={`agt-tab ${tab === "rooms" ? "active" : ""}`} onClick={() => setTab("rooms")}>{tr("navPlans")}</button>
+          <button className={`agt-tab ${tab === "mytrips" ? "active" : ""}`} onClick={() => setTab("mytrips")}>{tr("navTrips")}</button>
         </div>
         <div style={{ marginTop: 14 }}>
           <ImigongoStrip height={9} colors={["var(--gold)", "var(--clay-light)", "rgba(246,241,230,0.28)"]} />
@@ -3700,6 +3802,9 @@ export default function App() {
                     </div>
                   )}
                   <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
+                    {t.driver.verified?.id && t.driver.verified?.phone && (
+                      <span className="agt-badge verified"><ShieldCheck size={9} style={{ marginRight: 2, verticalAlign: -1 }} />Verified</span>
+                    )}
                     {t.driver.womenOnly && <span className="agt-badge women">{tr("filterWomen")}</span>}
                     <span className="agt-badge gold">{t.driver.level}</span>
                     {profile?.circles?.includes(t.driver.circleId) && (
@@ -3894,7 +3999,7 @@ export default function App() {
               <div className="agt-field-row">
                 <div className="agt-field">
                   <label>Date</label>
-                  <input placeholder="e.g. Sat, 9 Aug" value={parcelForm.date} onChange={(e) => setParcelForm({ ...parcelForm, date: e.target.value })} />
+                  <input type="date" min={todayIso()} value={parcelForm.date} onChange={(e) => setParcelForm({ ...parcelForm, date: e.target.value })} />
                 </div>
                 <div className="agt-field">
                   <label>Size</label>
@@ -3982,6 +4087,45 @@ export default function App() {
 
       {tab === "mytrips" && (
         <div className="agt-body" style={{ paddingTop: 28 }}>
+          <div className="agt-section-label"><span>{tr("myBookedTrips")}</span></div>
+          {(() => {
+            const booked = myBookings
+              .map((b) => ({ booking: b, trip: trips.find((t) => t.id === b.tripId) }))
+              .filter((x) => x.trip);
+            if (booked.length === 0) {
+              return (
+                <p style={{ fontSize: 12.5, color: "#8A8172", padding: "10px 0 16px 0" }}>
+                  You haven't booked a seat yet. Find a ride from Home or the Rides tab.
+                </p>
+              );
+            }
+            return booked.map(({ booking, trip: t }) => {
+              const isBookedTripCancelled = t.status === "cancelled";
+              return (
+                <div
+                  className={`agt-mytrip-card ${isBookedTripCancelled ? "cancelled" : ""}`}
+                  key={booking.id}
+                  onClick={() => viewMyBooking(booking)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                    <div className="agt-ticket-route-row">
+                      <span className="agt-ticket-place">{t.from}</span>
+                      <RouteLine />
+                      <span className="agt-ticket-place">{t.to}</span>
+                    </div>
+                    <span className={`agt-status-pill ${t.status}`}>{t.status}</span>
+                  </div>
+                  <div className="agt-parcel-meta">
+                    <span><Clock size={11} style={{ verticalAlign: -2 }} /> {t.date}, {t.time}</span>
+                    <span><Users size={11} style={{ verticalAlign: -2 }} /> {booking.seats.length} seat{booking.seats.length > 1 ? "s" : ""}</span>
+                    <span>{t.driver.name}</span>
+                  </div>
+                </div>
+              );
+            });
+          })()}
+
           {(() => {
             const myTrips = profile ? trips.filter((t) => t.driver.name === profile.name) : [];
             const earningsFor = (tripsList, statuses) =>
@@ -4013,7 +4157,7 @@ export default function App() {
             }
             return null;
           })()}
-          <div className="agt-section-label"><span>{tr("myPostedTrips")}</span></div>
+          <div className="agt-section-label" style={{ marginTop: 22 }}><span>{tr("myPostedTrips")}</span></div>
           {(() => {
             const myTrips = profile ? trips.filter((t) => t.driver.name === profile.name) : [];
             if (myTrips.length === 0) {
@@ -4089,7 +4233,12 @@ export default function App() {
             <div className="agt-field-row">
               <div className="agt-field">
                 <label>From</label>
-                <input value={form.from} onChange={(e) => setForm({ ...form, from: e.target.value })} />
+                <DestinationAutocomplete
+                  placeholder="Village, cell, sector, or town — e.g. Kigali"
+                  value={form.from}
+                  onChange={(val) => setForm({ ...form, from: val })}
+                  onSelect={({ lat, lng }) => setFormOriginPoint({ lat, lng })}
+                />
               </div>
               <div className="agt-field">
                 <label>To</label>
@@ -4129,11 +4278,11 @@ export default function App() {
             <div className="agt-field-row">
               <div className="agt-field">
                 <label>Date</label>
-                <input placeholder="Sat, 9 Aug" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+                <input type="date" min={todayIso()} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
               </div>
               <div className="agt-field">
                 <label>Time</label>
-                <input placeholder="09:00 AM" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} />
+                <input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} />
               </div>
             </div>
             <div className="agt-field-row">
@@ -4251,7 +4400,15 @@ export default function App() {
                         </div>
                         <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
                           <MessageCircle size={19} color="var(--forest)" style={{ cursor: "pointer" }} onClick={() => openChat(selectedTrip.driver)} />
-                          <ShieldCheck size={20} color="#1F4D3A" />
+                          {selectedTrip.driver.verified?.id && selectedTrip.driver.verified?.phone ? (
+                            <span title="Identity and phone number verified" style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 700, color: "var(--forest)" }}>
+                              <ShieldCheck size={18} color="var(--forest)" /> Verified
+                            </span>
+                          ) : (
+                            <span title="This driver hasn't finished verification yet" style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "#B7AE9C" }}>
+                              <ShieldCheck size={18} color="#B7AE9C" /> Pending
+                            </span>
+                          )}
                         </div>
                       </div>
 
@@ -5164,6 +5321,44 @@ export default function App() {
                 This simulates the OTP flow — any code you type is accepted. In the real build, ID verification would still call Rwanda's NIDA/face-matching service; the OTP just proves you control the phone or email tied to that ID.
               </p>
 
+              {profile.hasVehicle && (
+                <>
+                  <div className="agt-section-label"><span>Driver documents</span></div>
+                  <p style={{ fontSize: 11.5, color: "#8A8172", margin: "-4px 0 10px 0", lineHeight: 1.5 }}>
+                    Upload clear photos of these so the Agatigito team can verify you as a driver — passengers will see your verification status before booking a seat.
+                  </p>
+                  {[
+                    { field: "idDocDataUrl", label: "National ID (photo)" },
+                    { field: "licenseDataUrl", label: "Driving licence" },
+                    { field: "insuranceDataUrl", label: "Insurance / Yellow Card" },
+                  ].map(({ field, label }) => (
+                    <div className="agt-verify-row" key={field}>
+                      <div className="agt-verify-left">
+                        <FileText size={16} color="#1F4D3A" /> {label}
+                      </div>
+                      <label
+                        className={`agt-verify-btn ${profile[field] ? "done" : "pending"}`}
+                        style={{ display: "inline-block" }}
+                      >
+                        {profile[field] ? "Uploaded" : "Upload"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          style={{ display: "none" }}
+                          onChange={(e) => handleDocPick(e.target.files[0], field)}
+                        />
+                      </label>
+                    </div>
+                  ))}
+                  <p style={{ fontSize: 11, color: "#8A8172", margin: "6px 0 18px 0", lineHeight: 1.5 }}>
+                    {profile.idDocDataUrl && profile.licenseDataUrl && profile.insuranceDataUrl
+                      ? "All three documents are uploaded and pending review."
+                      : "Documents are reviewed once all three are uploaded."} In this prototype they're stored on this device only — the real build would send them securely to the Agatigito team for manual review, nothing here is auto-approved.
+                  </p>
+                </>
+              )}
+
               <div className="agt-section-label"><span>{tr("emergencyContact")}</span></div>
               <p style={{ fontSize: 11.5, color: "#8A8172", margin: "-4px 0 10px 0", lineHeight: 1.5 }}>
                 {tr("emergencyContactNote")}
@@ -5172,7 +5367,7 @@ export default function App() {
                 <div className="agt-field-row">
                   <div className="agt-field">
                     <label>{tr("fullName")}</label>
-                    <input placeholder="e.g. Diane K." value={emergencyForm.name} onChange={(e) => setEmergencyForm({ ...emergencyForm, name: e.target.value })} />
+                    <input placeholder="e.g. Diane K." autoComplete="name" value={emergencyForm.name} onChange={(e) => setEmergencyForm({ ...emergencyForm, name: e.target.value })} />
                   </div>
                   <div className="agt-field">
                     <label>{tr("phoneNumber")}</label>
@@ -5185,7 +5380,10 @@ export default function App() {
               </form>
 
               <div className="agt-section-label" style={{ marginTop: 20 }}><span>Help & Support</span></div>
-              <p style={{ fontSize: 11.5, color: "#8A8172", margin: "-4px 0 10px 0", lineHeight: 1.5 }}>
+              <div className="agt-sos-option" onClick={() => setShowHelp(true)}>
+                <BookOpen size={17} color="var(--forest)" /> How to use Agatigito & FAQ
+              </div>
+              <p style={{ fontSize: 11.5, color: "#8A8172", margin: "10px 0 10px 0", lineHeight: 1.5 }}>
                 Reach the Agatigito team directly — separate from your personal emergency contact above.
               </p>
               <a href="tel:+250789546286" className="agt-sos-option" style={{ textDecoration: "none", color: "var(--ink)" }}>
@@ -5259,6 +5457,52 @@ export default function App() {
                 <p><strong>Keep it on the platform.</strong> Book, pay, and communicate through Agatigito so that trips stay covered by support and dispute resolution.</p>
                 <p><strong>Speak up.</strong> Use the SOS button for emergencies and the "Report a problem" option to flag anything that made a trip feel unsafe.</p>
                 <p style={{ marginTop: 14 }}>These guidelines apply to everyone using Agatigito — riders, drivers, and companions alike.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Help & How to Use / FAQ sheet */}
+      {showHelp && (
+        <div className="agt-overlay" onClick={() => setShowHelp(false)}>
+          <div className="agt-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="agt-sheet-handle" />
+            <div className="agt-sheet-close" onClick={() => setShowHelp(false)}><X size={16} /></div>
+            <div className="agt-sheet-body" style={{ paddingTop: 30 }}>
+              <div className="disp" style={{ fontSize: 19, fontWeight: 600, marginBottom: 4 }}>How to use Agatigito</div>
+              <p style={{ fontSize: 11, color: "#8A8172", margin: "0 0 16px 0", lineHeight: 1.5 }}>
+                A quick walkthrough for passengers and drivers, plus answers to the questions people ask most.
+              </p>
+
+              <div className="agt-section-label"><span>As a passenger</span></div>
+              <div style={{ fontSize: 12.5, color: "var(--ink)", lineHeight: 1.65, marginBottom: 16 }}>
+                <p><strong>1. Create your profile.</strong> Add your name, phone number, and optionally your email on the welcome screen — no separate app download needed.</p>
+                <p><strong>2. Search for a ride.</strong> From Home, tap "Find a ride" and enter where you're going. Rides tab shows every open trip matching your route; use the filters (women-only, budget, leaving today) to narrow it down.</p>
+                <p><strong>3. Pick your seat and pickup point.</strong> Open a trip, choose a seat, and pick a public pickup point rather than sharing your home address.</p>
+                <p><strong>4. Pay in-app.</strong> Your payment is held by Agatigito and only released to the driver once the trip is marked completed — you're not paying a stranger directly.</p>
+                <p><strong>5. Track and stay safe.</strong> Once the driver starts the trip, you can follow it live on the map, and the SOS button is always one tap away if something feels wrong.</p>
+                <p><strong>6. Find it again.</strong> Every trip you book shows up under the Trips tab, so you can check its status or cancel without hunting for it.</p>
+              </div>
+
+              <div className="agt-section-label"><span>As a driver</span></div>
+              <div style={{ fontSize: 12.5, color: "var(--ink)", lineHeight: 1.65, marginBottom: 16 }}>
+                <p><strong>1. Turn on driver mode.</strong> In your profile, switch on "I have a vehicle" and add your vehicle details.</p>
+                <p><strong>2. Get verified.</strong> Verify your phone, email, and National ID, then upload your driving licence and insurance/Yellow Card under Driver documents — verified drivers show a badge passengers can see before they book.</p>
+                <p><strong>3. Post a trip.</strong> Tap "Offer a seat", enter your route, date, and time, and set your seats and price. Agatigito calculates a Fair Price range from the actual distance so no one over- or under-charges.</p>
+                <p><strong>4. Manage bookings.</strong> Passengers who book appear on your trip card in the Trips tab. Start the trip when you depart and mark it completed on arrival — that's what releases your payment.</p>
+                <p><strong>5. Get paid.</strong> Your payout per seat (after the Agatigito service fee) is shown before you post, so there are no surprises.</p>
+              </div>
+
+              <div className="agt-section-label"><span>FAQ</span></div>
+              <div style={{ fontSize: 12.5, color: "var(--ink)", lineHeight: 1.65 }}>
+                <p><strong>How do I register?</strong> Just your name and phone number to start; verifying your ID, phone, and email later unlocks full trust score and, for drivers, the ability to post trips with a verified badge.</p>
+                <p><strong>How do I book a trip?</strong> Search or browse the Rides tab, open a trip, choose a seat and pickup point, then confirm and pay — see the passenger walkthrough above.</p>
+                <p><strong>How do I accept a passenger as a driver?</strong> You don't need to manually approve seats — once a passenger books and pays, the seat is confirmed automatically and shows up on your trip card with their pickup point.</p>
+                <p><strong>How does payment work?</strong> Agatigito holds the payment from the moment a seat is booked and releases it to the driver once the trip is marked completed, minus the Agatigito service fee.</p>
+                <p><strong>Can I cancel?</strong> Passengers can cancel a booked seat from the Trips tab or the trip screen for a refund. Drivers can cancel a posted trip, which refunds every booked passenger.</p>
+                <p><strong>What if I feel unsafe?</strong> Tap the SOS button on any active trip. It can call emergency services, notify your emergency contact, or report the problem to the Agatigito team.</p>
+                <p><strong>How do I report a problem?</strong> Use "Report a problem" in the SOS menu, or reach the team directly under Help & Support.</p>
               </div>
             </div>
           </div>
